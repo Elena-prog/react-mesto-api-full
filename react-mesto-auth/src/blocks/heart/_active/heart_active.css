@@ -1,0 +1,8 @@
+.heart_active {
+    background-image: url(../../../images/heart-active.svg);
+    transition: all .5s linear;
+}
+
+.heart_active:hover {
+    opacity: 1;
+}   

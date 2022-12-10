@@ -1,0 +1,9 @@
+.entry__container {
+    margin-top: 13px;
+}
+
+@media screen and (max-width: 619px) {
+    .entry__container {
+        margin-top: 20px;
+    }
+}

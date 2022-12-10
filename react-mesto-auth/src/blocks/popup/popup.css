@@ -1,0 +1,16 @@
+.popup {
+    display: none;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-style: normal;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .5s, visibility 0s .5s;
+}
+
+.popup::before {
+    content: "";
+    background-color: #000000;
+    opacity: .5;
+    position: fixed;
+    inset: 0;
+}
