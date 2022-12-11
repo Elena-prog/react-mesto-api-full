@@ -37,6 +37,17 @@ class ApiAuth {
         .then(this._getResponseData)
     }
 
+    exit() {
+        return fetch(`${this._baseUrl}/signout`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(this._getResponseData)
+    }
+
 }
 
 const apiAuth = new ApiAuth({

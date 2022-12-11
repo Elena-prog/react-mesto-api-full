@@ -26,7 +26,7 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState(null);
   const [currentUser, setCurrentUser] = React.useState(null);
   const [cards, setCards] = React.useState([]);
-  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [loggedIn, setLoggedIn] = React.useState(()=> localStorage.getItem('loggedIn'));
   const [currentEmail, setCurrentEmail] = React.useState("");
   const [infoRegister, setInfoRegister] = React.useState({
     status: false,
@@ -60,7 +60,14 @@ function App() {
   }, [loggedIn]);
 
   function signOut() {
-    setLoggedIn(false);
+    apiAuth
+      .exit()
+      .then((res) => {
+        setLoggedIn(false);
+        localStorage.removeItem('loggedIn');
+      })
+      .catch((err) => alert(`${err}. Не удалось выйти из приложения.`)
+    );
   }
 
   function onRegister(password, email) {
@@ -91,6 +98,7 @@ function App() {
       .login(password, email)
       .then(() => {
         setLoggedIn(true);
+        localStorage.setItem('loggedIn', true);
         setCurrentEmail(email);
         history.push("/");
       })

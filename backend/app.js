@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 const handleError = require('./middlewares/handleError');
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -29,6 +30,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   autoIndex: true,
 });
 
+app.use(helmet());
 app.use('*', cors(options));
 app.use(requestLogger);
 app.use(cookieParser());
@@ -42,6 +44,7 @@ app.get('/crash-test', () => {
 });
 
 app.use('/', router);
+
 app.use(errorLogger);
 app.use(errors());
 app.use(handleError);
