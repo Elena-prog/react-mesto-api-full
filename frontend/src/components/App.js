@@ -27,7 +27,7 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState(null);
   const [cards, setCards] = React.useState([]);
   const [loggedIn, setLoggedIn] = React.useState(()=> localStorage.getItem('loggedIn'));
-  const [currentEmail, setCurrentEmail] = React.useState("");
+  const [currentEmail, setCurrentEmail] = React.useState(()=> localStorage.getItem('currentEmail'));
   const [infoRegister, setInfoRegister] = React.useState({
     status: false,
     message: "",
@@ -49,13 +49,13 @@ function App() {
       .then((userData) => {
         setCurrentUser(userData);
       })
-      .catch((err) => alert(err));
+      .catch((err) => handleAuthError(err, 'Не удалось загрузить информацию о пользователе.'));
     api
       .getInitialCards()
       .then((cardsData) => {
         setCards(cardsData);
       })
-      .catch((err) => alert(err));
+      .catch((err) => handleAuthError(err, 'Не удалось загрузить карточки.'));
     }
   }, [loggedIn]);
 
@@ -64,9 +64,11 @@ function App() {
       .exit()
       .then((res) => {
         setLoggedIn(false);
+        setCurrentEmail('');
         localStorage.removeItem('loggedIn');
+        localStorage.removeItem('currentEmail');
       })
-      .catch((err) => alert(`${err}. Не удалось выйти из приложения.`)
+      .catch((err) => console.log(`Ошибка: ${err}. Не удалось выйти из приложения.`)
     );
   }
 
@@ -100,6 +102,7 @@ function App() {
         setLoggedIn(true);
         localStorage.setItem('loggedIn', true);
         setCurrentEmail(email);
+        localStorage.setItem('currentEmail', email);
         history.push("/");
       })
       .catch((err) => {
@@ -121,7 +124,7 @@ function App() {
           cards.map((c) => (c._id === card._id ? newCard : c))
         );
       })
-      .catch((err) => alert(`${err}. Не удалось выполнить операцию.`));
+      .catch((err) => handleAuthError(err, 'Не удалось выполнить операцию.'));
   }
 
   function handleCardDelete() {
@@ -131,7 +134,7 @@ function App() {
         setCards((cards) => cards.filter((c) => c._id !== deletedCard._id));
         closeAllPopups();
       })
-      .catch((err) => alert(`${err}. Не удалось удалить карточку.`));
+      .catch((err) => handleAuthError(err, 'Не удалось удалить карточку.'));
   }
 
   function handleEditAvatarClick() {
@@ -167,9 +170,7 @@ function App() {
         setCurrentUser(data);
         closeAllPopups();
       })
-      .catch((err) =>
-        alert(`${err}. Не удалось изменить информацию о пользователе.`)
-      );
+      .catch((err) => handleAuthError(err, 'Не удалось изменить информацию о пользователе.'));
   }
 
   function handleUpdateAvatar({ avatar }) {
@@ -179,7 +180,7 @@ function App() {
         setCurrentUser(data);
         closeAllPopups();
       })
-      .catch((err) => alert(`${err}. Не удалось обновить аватар.`));
+      .catch((err) => handleAuthError(err, 'Не удалось обновить аватар.'));
   }
 
   function handleAddPlaceSubmit({ name, link }) {
@@ -189,12 +190,22 @@ function App() {
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
-      .catch((err) => alert(`${err}. Не удалось создать карточку.`));
+      .catch((err) => handleAuthError(err, 'Не удалось создать карточку.'));
   }
 
   function onConfirmCardDelete (card) {
     setDeletedCard(card);
     setisConfirmPopupOpen(true);
+  }
+
+  function handleAuthError(error, errorMessage) {
+    if(error === 401) {
+      setLoggedIn(false);
+      setCurrentEmail('');
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('currentEmail');
+    };
+    console.log(`Ошибка: ${error}. ${errorMessage}`);
   }
 
   return (
