@@ -51,7 +51,7 @@ class ApiAuth {
 }
 
 const apiAuth = new ApiAuth({
-    baseUrl: 'http://localhost:3000'
+    baseUrl: 'https://api.mesto.russia.nomoredomains.club'
 })
 
 export default apiAuth;
