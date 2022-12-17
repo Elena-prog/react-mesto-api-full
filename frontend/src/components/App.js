@@ -27,7 +27,7 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState(null);
   const [cards, setCards] = React.useState([]);
   const [loggedIn, setLoggedIn] = React.useState(()=> localStorage.getItem('loggedIn'));
-  const [currentEmail, setCurrentEmail] = React.useState(()=> localStorage.getItem('currentEmail'));
+  const [currentEmail, setCurrentEmail] = React.useState('');
   const [infoRegister, setInfoRegister] = React.useState({
     status: false,
     message: "",
@@ -48,6 +48,7 @@ function App() {
       .getInitialUserInfo()
       .then((userData) => {
         setCurrentUser(userData);
+        setCurrentEmail(userData.email);
       })
       .catch((err) => handleAuthError(err, 'Не удалось загрузить информацию о пользователе.'));
     api
@@ -66,7 +67,6 @@ function App() {
         setLoggedIn(false);
         setCurrentEmail('');
         localStorage.removeItem('loggedIn');
-        localStorage.removeItem('currentEmail');
       })
       .catch((err) => console.log(`Ошибка: ${err}. Не удалось выйти из приложения.`)
     );
@@ -102,7 +102,6 @@ function App() {
         setLoggedIn(true);
         localStorage.setItem('loggedIn', true);
         setCurrentEmail(email);
-        localStorage.setItem('currentEmail', email);
         history.push("/");
       })
       .catch((err) => {
@@ -203,7 +202,6 @@ function App() {
       setLoggedIn(false);
       setCurrentEmail('');
       localStorage.removeItem('loggedIn');
-      localStorage.removeItem('currentEmail');
     };
     console.log(`Ошибка: ${error}. ${errorMessage}`);
   }
